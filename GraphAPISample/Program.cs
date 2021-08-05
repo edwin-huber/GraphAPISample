@@ -61,6 +61,7 @@ namespace GraphAPISample
                 Console.WriteLine("1. Display access token");
                 Console.WriteLine("2. View this week's calendar");
                 Console.WriteLine("3. Add an event");
+                Console.WriteLine("4. Add a guest invitee");
 
                 try
                 {
@@ -92,6 +93,10 @@ namespace GraphAPISample
                     case 3:
                         // Create a new event
                         CalendarHelper.CreateEvent(user.MailboxSettings.TimeZone);
+                        break;
+                    case 4:
+                        // Create guest users
+                        CalendarHelper.InviteUsers();
                         break;
                     default:
                         Console.WriteLine("Invalid choice! Please try again.");

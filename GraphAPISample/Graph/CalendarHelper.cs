@@ -106,5 +106,45 @@ namespace GraphAPISample.Graph
             }
         }
 
+        internal static void InviteUsers()
+        {
+            // Prompt user for info
+
+           // Attendees are optional
+            var inviteeList = new List<string>();
+            if (UserInput.GetUserYesNo("Do you want to invite external users?"))
+            {
+                string invitee = null;
+
+                do
+                {
+                    invitee = UserInput.GetUserInput("invitee", false,
+                        (input) => UserInput.GetUserYesNo($"{input} - add invitee?"));
+
+                    if (!string.IsNullOrEmpty(invitee))
+                    {
+                        inviteeList.Add(invitee);
+                    }
+                }
+                while (!string.IsNullOrEmpty(invitee));
+            }
+
+            var redirectUrl = UserInput.GetUserInput("redirectUrl", false,
+                input => true);
+
+            Console.WriteLine($"Invitees: {string.Join(";", inviteeList)}");
+          
+            if (UserInput.GetUserYesNo("Add Invitees as Guest Users?"))
+            {
+                GraphHelper.InviteUsers(
+                    inviteeList,
+                    redirectUrl).Wait();
+            }
+            else
+            {
+                Console.WriteLine("Canceled.");
+            }
+        }
+
     }
 }

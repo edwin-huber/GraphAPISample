@@ -118,7 +118,6 @@ namespace GraphAPISample.Graph
         }
 
         
-
         internal static void GetUserMetaFromGraph(out User user, out string userTimeZone, out string dateFormat,
             out string timeFormat)
         {
@@ -200,12 +199,52 @@ namespace GraphAPISample.Graph
             try
             {
                 // POST /me/events
-                await _graphClient.Me
+                var NewEvent = await _graphClient.Me
                     .Events
                     .Request()
                     .AddAsync(newEvent);
 
-                Console.WriteLine("Event added to calendar.");
+                Console.WriteLine($"Event added to calendar. Join Link: {NewEvent.OnlineMeeting.JoinUrl}");
+            }
+            catch (ServiceException ex)
+            {
+                Console.WriteLine($"Error creating event: {ex.Message}");
+            }
+        }
+
+        public static async Task InviteUsers(
+            List<string> invitees,
+            string redirectUrl
+            )
+        {
+            
+            try
+            {
+                // Only add invitees if there are actual
+                // values
+                if (invitees.Count > 0)
+                {
+                    foreach (var useremail in invitees)
+                    {
+                        var invitation = new Invitation
+                        {
+                            InvitedUserEmailAddress = useremail,
+                            InviteRedirectUrl = redirectUrl,
+                            SendInvitationMessage = true
+
+                        };
+
+                        // POST /Invitations
+                        var NewInvitation = await _graphClient
+                        .Invitations
+                        .Request()
+                        .AddAsync(invitation);                       
+
+                        Console.WriteLine("User added");
+                    }
+
+                }
+               
             }
             catch (ServiceException ex)
             {
